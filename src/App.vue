@@ -1,85 +1,53 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <a-layout has-sider>
+    <a-layout-sider
+      :style="{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0, top: 0, bottom: 0 }"
+    >
+      <div class="logo" />
+      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
+        <a-menu-item key="1">
+          <router-link to="/">Home</router-link>
+        </a-menu-item>
+        <a-menu-item key="2">
+          <router-link to="/analysis">Log Analysis</router-link>
+        </a-menu-item>
+        <a-menu-item key="3">
+          <router-link to="/about">About</router-link>
+        </a-menu-item>
+      </a-menu>
+    </a-layout-sider>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <a-layout :style="{ marginLeft: '200px' }">
+      <a-layout-header :style="{ background: '#fff', padding: 0 }" />
+      <a-layout-content :style="{ margin: '24px 16px 0', overflow: 'initial' }">
+        <div :style="{ padding: '24px', background: '#fff', textAlign: 'center' }">
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component :is="Component" />
+            </keep-alive>
+          </router-view>
+        </div>
+      </a-layout-content>
+    </a-layout>
+  </a-layout>
 </template>
 
+<script setup>
+import { ref } from 'vue'
+const selectedKeys = ref(['1'])
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+#components-layout-demo-fixed-sider .logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+}
+.site-layout .site-layout-background {
+  background: #fff;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+[data-theme='dark'] .site-layout .site-layout-background {
+  background: #141414;
 }
 </style>

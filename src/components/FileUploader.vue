@@ -11,7 +11,7 @@
     <p class="ant-upload-drag-icon">
       <InboxOutlined></InboxOutlined>
     </p>
-    <p class="ant-upload-text">Click or drag file to this area to upload</p>
+    <p class="ant-upload-text">{{uploadText}}</p>
     <p class="ant-upload-hint">
       Support for a single or bulk upload. Strictly prohibit from uploading company data or other
       band files
@@ -27,9 +27,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, toRaw, defineProps, withDefaults } from 'vue'
 import { message } from 'ant-design-vue'
 import { InboxOutlined } from '@ant-design/icons-vue'
+
+// define props uploadText
+const props = defineProps({
+  uploadText: {
+    type: String,
+    default: 'Click or drag file to this area to upload',
+  },
+})
+
+
 const fileList = ref([])
 const handleChange = (info) => {
   const status = info.file.status
@@ -63,6 +73,11 @@ function handleBeforeUpload(file) {
 }
 
 function handleProcess(file) {
+//    file is a proxy object, so we need to get the original file object
+   const originalFile = toRaw(file)
+
+   handleBeforeUpload(originalFile.originFileObj)
+
   console.log(`process file ${file.name}`)
 
 }

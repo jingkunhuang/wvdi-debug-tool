@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, toRaw, defineProps, withDefaults } from 'vue'
+import { ref, toRaw } from 'vue'
 import { message } from 'ant-design-vue'
 import { InboxOutlined } from '@ant-design/icons-vue'
 

@@ -11,7 +11,7 @@
     <p class="ant-upload-drag-icon">
       <InboxOutlined></InboxOutlined>
     </p>
-    <p class="ant-upload-text">{{uploadText}}</p>
+    <p class="ant-upload-text">{{ uploadText }}</p>
     <p class="ant-upload-hint">
       Support for a single or bulk upload. Strictly prohibit from uploading company data or other
       band files
@@ -31,7 +31,6 @@ import { ref, toRaw } from 'vue'
 import { message } from 'ant-design-vue'
 import { InboxOutlined } from '@ant-design/icons-vue'
 
-// define props uploadText
 const props = defineProps({
   uploadText: {
     type: String,
@@ -39,8 +38,11 @@ const props = defineProps({
   },
 })
 
+// define emit
+const emits = defineEmits(['onUpload'])
 
 const fileList = ref([])
+
 const handleChange = (info) => {
   const status = info.file.status
   if (status !== 'uploading') {
@@ -52,6 +54,7 @@ const handleChange = (info) => {
     message.error(`${info.file.name} file upload failed.`)
   }
 }
+
 function handleDrop(e) {
   console.log(e)
 }
@@ -67,18 +70,20 @@ function handleBeforeUpload(file) {
     // Process the file data (e.target.result)
     console.log(e.target.result)
     message.success(e.target.result)
+
+    // Emit the file data to parent component
+    emits('onUpload', e.target.result)
   }
   reader.readAsDataURL(file)
   return false
 }
 
 function handleProcess(file) {
-//    file is a proxy object, so we need to get the original file object
-   const originalFile = toRaw(file)
+  //    file is a proxy object, so we need to get the original file object
+  const originalFile = toRaw(file)
 
-   handleBeforeUpload(originalFile.originFileObj)
+  handleBeforeUpload(originalFile.originFileObj)
 
   console.log(`process file ${file.name}`)
-
 }
 </script>

@@ -4,10 +4,10 @@
 
   <a-row :gutter="12">
     <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
-      <FileUploader ref="FileUploaderHvdRef" uploadText="Upload HVD logs" @onUpload="processFile" />
+      <FileUploader uploadText="Upload HVD logs" @onUpdate="updateFileList($event,'hvd')" />
     </a-col>
     <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
-      <FileUploader ref="FileUploaderTcRef" uploadText="Upload Thin-client logs" />
+      <FileUploader uploadText="Upload Thin-client logs" @onUpdate="updateFileList($event,'tc')" />
     </a-col>
   </a-row>
 
@@ -29,38 +29,44 @@ import { ref } from 'vue'
 import { message } from 'ant-design-vue'
 import LineChartCard from '../components/LineChartCard.vue'
 import FileUploader from '@/components/FileUploader.vue'
-import { computed } from 'vue'
 
-function processFile(fileContent) {
-  console.log('Processing file:', fileContent.length)
-  message.success('file length: ' + fileContent.length)
+
+var fileListHvd = []
+var fileListTc = []
+
+function updateFileList(fileList, type) {
+  console.log(`update ${type} FileList:`, fileList.length)
+  if (type === 'hvd') {
+    fileListHvd = fileList
+  } else if (type === 'tc') {
+    fileListTc = fileList
+  }
 }
 
 const analyzeButtonLoading = ref(false)
 const analyzeButtonText = ref('Analyze')
 
-const FileUploaderHvdRef = ref(null)
-const fileListTc = ref(null)
-
-const fileListHvdComputed = computed(() => {
-  return FileUploaderHvdRef.value?.uploadedFiles
-})
 
 function analyze() {
   analyzeButtonLoading.value = true
   analyzeButtonText.value = 'Analyzing...'
 
-  let fileUploaderHvd = fileListHvdComputed.value
+  const reader = new FileReader()
+  reader.onload = (event) => {
+    const fileContent = event.target.result
+    const lines = fileContent.split('\n')
+    message.success(`read ${lines.length} lines`)
 
-  for (let [key, value] of fileUploaderHvd) {
-    console.log(key)
-    message.success('analyze file: ' + value.name)
-  }
-
-  setTimeout(() => {
     analyzeButtonLoading.value = false
     analyzeButtonText.value = 'Analyze'
-  }, 3000)
+  }
+
+  reader.readAsText(fileListHvd[0])
+
+  // setTimeout(() => {
+  //   analyzeButtonLoading.value = false
+  //   analyzeButtonText.value = 'Analyze'
+  // }, 3000)
 }
 </script>
 

@@ -15,8 +15,6 @@
     {{ analyzeButtonText }}
   </a-button>
 
-  <p>{{ fileListHvdComputed }}</p>
-
   <a-divider />
 
   <div class="line-chart-wrapper">
@@ -31,37 +29,38 @@ import { ref } from 'vue'
 import { message } from 'ant-design-vue'
 import LineChartCard from '../components/LineChartCard.vue'
 import FileUploader from '@/components/FileUploader.vue'
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 function processFile(fileContent) {
   console.log('Processing file:', fileContent.length)
   message.success('file length: ' + fileContent.length)
 }
 
-const analyzeButtonLoading = ref(false);
-const analyzeButtonText = ref('Analyze');
+const analyzeButtonLoading = ref(false)
+const analyzeButtonText = ref('Analyze')
 
 const FileUploaderHvdRef = ref(null)
 const fileListTc = ref(null)
 
 const fileListHvdComputed = computed(() => {
-  return FileUploaderHvdRef.value?.uploadedFiles || []
+  return FileUploaderHvdRef.value?.uploadedFiles
 })
 
 function analyze() {
-  analyzeButtonLoading.value = true;
-  analyzeButtonText.value = 'Analyzing...';
+  analyzeButtonLoading.value = true
+  analyzeButtonText.value = 'Analyzing...'
 
-  let fileUploaderHvd = fileListHvdComputed;
+  let fileUploaderHvd = fileListHvdComputed.value
 
   for (let [key, value] of fileUploaderHvd) {
-    console.log(key);
+    console.log(key)
+    message.success('analyze file: ' + value.name)
   }
 
   setTimeout(() => {
-    analyzeButtonLoading.value = false;
-    analyzeButtonText.value = 'Analyze';
-  }, 3000);
+    analyzeButtonLoading.value = false
+    analyzeButtonText.value = 'Analyze'
+  }, 3000)
 }
 </script>
 

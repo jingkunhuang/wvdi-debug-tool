@@ -23,7 +23,11 @@
           }}</span>
           <span class="file-actions">
             <a href="javascript:;" @click="handleProcess(file)">process</a>
-            <a href="javascript:;" @click="handleRemove(file);actions.remove($event)">delete</a>
+            <a
+              href="javascript:;"
+              @click="handleRemove(file);actions.remove($event)"
+              >delete</a
+            >
           </span>
         </a-space>
       </template>
@@ -38,7 +42,7 @@ import { InboxOutlined } from '@ant-design/icons-vue'
 
 const fileList = ref([])
 
-const uploadedFiles = new Map()
+const uploadedFiles = ref(new Map())
 
 const props = defineProps({
   uploadText: {
@@ -49,8 +53,6 @@ const props = defineProps({
 
 // define emit
 const emits = defineEmits(['onUpload'])
-
-
 
 const handleChange = (info) => {
   const status = info.file.status
@@ -71,10 +73,10 @@ function handleDrop(e) {
 function handleBeforeUpload(file) {
   // Prevent default upload behavior
   message.success(`${file.name} handleBeforeUpload`)
-  uploadedFiles.set(file.uid, file)
+  uploadedFiles.value.set(file.uid, file)
   message.success(`${file.name} file uploaded successfully.`)
 
-  message.success(`${fileList.size} read file successfully.`)
+  message.success(`${fileList.value.size} read file successfully.`)
 
   // Handle file upload to browser using JavaScript File API
   message.success(`${file.name} read file successfully.`)
@@ -93,7 +95,7 @@ function handleBeforeUpload(file) {
 
 function handleRemove(file) {
   console.log(`handleRemove ${file.name}`)
-  uploadedFiles.delete(file.uid)
+  uploadedFiles.value.delete(file.uid)
 }
 
 function handleProcess(file) {
@@ -108,7 +110,6 @@ function handleProcess(file) {
 defineExpose({
   uploadedFiles,
 })
-
 </script>
 
 <style>

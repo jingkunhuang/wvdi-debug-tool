@@ -1,35 +1,44 @@
 <template>
-  <!-- upload file locally -->
-  <a-upload-dragger
-    v-model:fileList="fileList"
-    name="file"
-    :multiple="true"
-    :beforeUpload="handleBeforeUpload"
-    @change="handleChange"
-    @drop="handleDrop"
-  >
-    <p class="ant-upload-drag-icon">
-      <InboxOutlined></InboxOutlined>
-    </p>
-    <p class="ant-upload-text">{{ uploadText }}</p>
-    <p class="ant-upload-hint">
-      Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-      band files
-    </p>
-    <template #itemRender="{ file, actions }">
-      <a-space>
-        <span :style="file.status === 'error' ? 'color: red' : ''">{{ file.name }}</span>
-        <a href="javascript:;" @click="handleProcess(file)">process</a>
-        <a href="javascript:;" @click="actions.remove">delete</a>
-      </a-space>
-    </template>
-  </a-upload-dragger>
+  <a-card size="small" :bordered="false">
+    <a-upload-dragger
+      v-model:fileList="fileList"
+      name="file"
+      :multiple="true"
+      :beforeUpload="handleBeforeUpload"
+      @change="handleChange"
+      @drop="handleDrop"
+    >
+      <p class="ant-upload-drag-icon">
+        <InboxOutlined></InboxOutlined>
+      </p>
+      <p class="ant-upload-text">{{ uploadText }}</p>
+      <p class="ant-upload-hint">
+        Support for a single or bulk upload. Strictly prohibit from uploading company data or other
+        band files
+      </p>
+      <template #itemRender="{ file, actions }">
+        <a-space class="file-item">
+          <span class="file-name" :style="file.status === 'error' ? 'color: red' : ''">{{
+            file.name
+          }}</span>
+          <span class="file-actions">
+            <a href="javascript:;" @click="handleProcess(file)">process</a>
+            <a href="javascript:;" @click="handleRemove(file);actions.remove($event)">delete</a>
+          </span>
+        </a-space>
+      </template>
+    </a-upload-dragger>
+  </a-card>
 </template>
 
 <script setup>
 import { ref, toRaw } from 'vue'
 import { message } from 'ant-design-vue'
 import { InboxOutlined } from '@ant-design/icons-vue'
+
+const fileList = ref([])
+
+const uploadedFiles = new Map()
 
 const props = defineProps({
   uploadText: {
@@ -41,7 +50,7 @@ const props = defineProps({
 // define emit
 const emits = defineEmits(['onUpload'])
 
-const fileList = ref([])
+
 
 const handleChange = (info) => {
   const status = info.file.status
@@ -61,7 +70,11 @@ function handleDrop(e) {
 
 function handleBeforeUpload(file) {
   // Prevent default upload behavior
+  message.success(`${file.name} handleBeforeUpload`)
+  uploadedFiles.set(file.uid, file)
   message.success(`${file.name} file uploaded successfully.`)
+
+  message.success(`${fileList.size} read file successfully.`)
 
   // Handle file upload to browser using JavaScript File API
   message.success(`${file.name} read file successfully.`)
@@ -78,12 +91,38 @@ function handleBeforeUpload(file) {
   return false
 }
 
+function handleRemove(file) {
+  console.log(`handleRemove ${file.name}`)
+  uploadedFiles.delete(file.uid)
+}
+
 function handleProcess(file) {
   //    file is a proxy object, so we need to get the original file object
   const originalFile = toRaw(file)
 
-  handleBeforeUpload(originalFile.originFileObj)
+  const fileObj = originalFile.originFileObj
 
-  console.log(`process file ${file.name}`)
+  console.log(`handleProcess ${fileObj.name}`)
 }
+
+defineExpose({
+  uploadedFiles,
+})
+
 </script>
+
+<style>
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+.file-name {
+  flex: 1;
+}
+.file-actions {
+  display: flex;
+  gap: 8px;
+}
+</style>

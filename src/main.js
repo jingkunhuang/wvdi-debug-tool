@@ -7,6 +7,8 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
+google.charts.load('current', {'packages':['corechart']});
+
 const app = createApp(App)
 app.use(createPinia())
 app.use(Antd)

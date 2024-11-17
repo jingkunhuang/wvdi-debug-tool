@@ -15,8 +15,7 @@
       </p>
       <p class="ant-upload-text">{{ uploadText }}</p>
       <p class="ant-upload-hint">
-        Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-        band files
+        Support txt files only. All files are processed in the browser.
       </p>
     </a-upload-dragger>
   </a-card>

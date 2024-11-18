@@ -29,8 +29,9 @@ export default class Graph_VDIFramework_Roundtrip {
             start_time = new Date(time_match[0]);
           } else if (match[1] == 'leave' && start_time) {
             let roundtrip = new Date(time_match[0]) - start_time;
-            // point style 1 green, 0 red
-            const pointStyle = roundtrip < 1000*10 ? 'point { size: 3; shape-type: circle; fill-color: #00FF00; }' : 'point { size: 10; shape-type: circle; fill-color: #FF0000; }';
+            // point style < 1000ms green, < 10s orange, >= 10s red
+            //const pointStyle = roundtrip < 1000*10 ? 'point { size: 2; shape-type: circle; fill-color: #00FF00; }' : 'point { size: 5; shape-type: circle; fill-color: #FF0000; }';
+            const pointStyle = roundtrip < 1000 ? 'point { size: 2; shape-type: circle; fill-color: #00FF00; }' : roundtrip < 10000 ? 'point { size: 5; shape-type: circle; fill-color: #FFA500; }' : 'point { size: 5; shape-type: circle; fill-color: #FF0000; }';
             data.push([new Date(time_match[0]), roundtrip, pointStyle]);
         }
       }
@@ -38,7 +39,7 @@ export default class Graph_VDIFramework_Roundtrip {
     });
 
     let chartOptions = {
-      title: 'VDIFramework Roundtrip',
+      title: 'VDIFramework Media Channel Roundtrip',
       legend: { position: 'none' },
       chartArea: {
         // leave room for y-axis labels

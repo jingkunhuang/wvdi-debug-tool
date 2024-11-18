@@ -23,7 +23,7 @@ export default class Graph_VDIFramework_Heartbeat {
         let time_match = line.match(constants.REGEX_TIMESTAMP);
         if (time_match) {
           // point style 1 green, 0 red
-          const pointStyle = parseInt(match[1]) ? 'point { size: 5; shape-type: circle; fill-color: #00FF00; }' : 'point { size: 5; shape-type: circle; fill-color: #FF0000; }';
+          const pointStyle = parseInt(match[1]) ? 'point { size: 3; shape-type: circle; fill-color: #00FF00; }' : 'point { size: 5; shape-type: circle; fill-color: #FF0000; }';
           data.push([new Date(time_match[0]), parseInt(match[1]), pointStyle]);
         }
       }
@@ -61,7 +61,7 @@ export default class Graph_VDIFramework_Heartbeat {
     };
 
     return {
-      type: 'LineChart',
+      type: 'ScatterChart',
       data: data,
       options: chartOptions,
       settings: chartSettings,

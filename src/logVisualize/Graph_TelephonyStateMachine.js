@@ -103,7 +103,7 @@ export default class Graph_TelephonyStateMachine {
             const end_time_index = 3;
             //const end_time_index = 4;
 
-            if (state.data.length > 0 && state.data[state.data.length - 1][end_time_index] === time_end) {
+            if (state.data.length > 0 ) {
               state.data[state.data.length - 1][end_time_index] = transitionTime;
             }
             else {

@@ -9,7 +9,7 @@
           <router-link to="/">Home</router-link>
         </a-menu-item>
         <a-menu-item key="2">
-          <router-link to="/analysis">Log Analysis</router-link>
+          <router-link to="/analysis">Log visualization</router-link>
         </a-menu-item>
         <a-menu-item key="3">
           <router-link to="/about">About</router-link>

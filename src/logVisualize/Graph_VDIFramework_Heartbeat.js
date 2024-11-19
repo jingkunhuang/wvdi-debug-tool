@@ -6,6 +6,9 @@ import { getLogTimeRange } from '@/utils/logUtils';
 
 const Regex_onHeartBeatReceived = /onHeartBeatReceived: (\d)/;
 
+  // onNewMessageReceived: 'session down' received
+  const Regex_sessionStatus = /onNewMessageReceived: 'session (up|down)' received/;
+
 export default class Graph_VDIFramework_Heartbeat {
 
   process(lines, globalOptions, globalSettings) {
@@ -15,7 +18,7 @@ export default class Graph_VDIFramework_Heartbeat {
     const [time_begin, time_end] = getLogTimeRange(lines);
 
     let data = [];
-    data.push(['Time', 'Heartbeat', { role: 'style' }]);
+    data.push(['Time', 'Heartbeat', {role:'annotation'},{ role: 'style' }]);
 
     lines.forEach((line) => {
       let match = line.match(Regex_onHeartBeatReceived);
@@ -24,7 +27,15 @@ export default class Graph_VDIFramework_Heartbeat {
         if (time_match) {
           // point style 1 green, 0 red
           const pointStyle = parseInt(match[1]) ? 'point { size: 3; shape-type: circle; fill-color: #00FF00; }' : 'point { size: 5; shape-type: circle; fill-color: #FF0000; }';
-          data.push([new Date(time_match[0]), parseInt(match[1]), pointStyle]);
+          data.push([new Date(time_match[0]), parseInt(match[1]), null, pointStyle]);
+        }
+      }
+
+      let match_session = line.match(Regex_sessionStatus);
+      if (match_session) {
+        let time_match = line.match(constants.REGEX_TIMESTAMP);
+        if (time_match) {
+          data.push([new Date(time_match[0]), match_session[1] == 'up' ? 1 : 0, 'session ' + match_session[1], null]);
         }
       }
     });

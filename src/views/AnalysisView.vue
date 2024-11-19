@@ -7,7 +7,7 @@
       <FileUploader uploadText="Upload HVD logs" @onUpdate="updateFileList($event,'hvd')" />
     </a-col>
     <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
-      <FileUploader uploadText="Upload Thin-client logs" @onUpdate="updateFileList($event,'tc')" />
+      <FileUploader uploadText="[todo] Upload Thin-client logs" @onUpdate="updateFileList($event,'tc')" />
     </a-col>
   </a-row>
 
@@ -16,7 +16,7 @@
   </a-button>
   <a-slider v-model:value="dateSliderValue" range @afterChange="onAfterDateSliderChange" />
   <a-space>
-      <a-range-picker v-model:value="datePickerValue" show-time />
+      <!-- <a-range-picker v-model:value="datePickerValue" show-time /> -->
       <a-button type="primary" @click="onFilterToTime">Filter to Time</a-button>
       <a-button type="primary" @click="dateSliderValue=[0, 100]">Reset</a-button>
   </a-space>

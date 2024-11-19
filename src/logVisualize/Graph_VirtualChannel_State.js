@@ -12,7 +12,7 @@
   import { getLogTimeRange } from '@/utils/logUtils';
 
   // updateStreamStatus::stream name:Basic AfterState:0
-  const Regex_updateStreamStatus = /updateStreamStatus::stream name:(\w+) (Pre|After)State:(\d+)/;
+  const Regex_updateStreamStatus = /stream name:(\w+) (Pre|After)State:(\d+)/;
 
   // onNewMessageReceived: 'session down' received
   const Regex_sessionStatus = /onNewMessageReceived: 'session (up|down)' received/;
@@ -118,6 +118,7 @@
 
       const chartHeight = num_rows * 40 + 60;
 
+      console.log('num_rows: ' + num_rows);
       console.log('time_begin: ' + time_begin);
 
       let chartOptions = {

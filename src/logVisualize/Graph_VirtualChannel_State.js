@@ -150,6 +150,20 @@
         },
       };
 
+
+      // Set colors for each state
+      const stateColors = {
+        'Unavailable': '#FF0000', // Red
+        'StreamAvailable': '#00FF00', // Green
+        'PeerUnsupported': '#0000FF', // Blue
+        'AvaliableWithoutEncryption': '#FFFF00', // Yellow
+        'Unknown': '#808080' // Gray
+      };
+
+      const colors = data.slice(1).map(row => stateColors[row[1]] || '#000000'); // Default to black if no color is found
+
+      chartOptions.colors = colors;
+
       let chartSettings = {
         packages: ['timeline'],
       };

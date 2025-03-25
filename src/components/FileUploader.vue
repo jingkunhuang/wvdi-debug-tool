@@ -1,7 +1,7 @@
 <template>
   <a-card size="small" :bordered="false">
     <a-upload-dragger
-      accept=".txt"
+      accept=".txt, .log"
       v-model:fileList="fileList"
       name="file"
       :multiple="true"

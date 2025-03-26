@@ -13,8 +13,7 @@
 
 
 
-import constants from '@/utils/constants'
-import { getLogTimeRange } from '@/utils/logUtils';
+import { getLogTime, getLogTimeRange } from '@/utils/logUtils';
 
 // [CallState] Transitioned from CallDisconnected to PreviewVideo. Call Id = [9d107073-81c2-4a6a-b5f6-668f4df46075]
 const Regex_StateTranstion = /\[(\w+)\] Transitioned from (\w+) to (\w+).*Call Id = \[([0-9a-f-]+)\]/;
@@ -27,6 +26,7 @@ const final_states = ['DisposeCall', 'LocusLeft', 'MediaDisconnected'];
 
 export default class Graph_TelephonyStateMachine {
 
+  // eslint-disable-next-line no-unused-vars
   process(lines, globalOptions, globalSettings) {
 
     console.log('Graph_TelephonyStateMachine process');
@@ -51,10 +51,9 @@ export default class Graph_TelephonyStateMachine {
       //let match = line.match(Regex_StateTranstion);
       let match = line.match(Regex_StateTranstion);
       if (match) {
-        let time_match = line.match(constants.REGEX_TIMESTAMP);
-        if (time_match) {
-
-          let transitionTime = new Date(time_match[0]);
+        let time = getLogTime(line);
+        if (time) {
+          let transitionTime = time;
 
           let stateType = match[1];
           let stateFrom = match[2];

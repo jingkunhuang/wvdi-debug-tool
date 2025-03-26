@@ -36,20 +36,33 @@ import { message } from 'ant-design-vue'
 import { GChart } from 'vue-google-charts'
 import FileUploader from '@/components/FileUploader.vue'
 import { readFilesAsync } from '@/utils/fileUtils'
-import constants from '@/utils/constants'
-import { getLogTimeRange, filterToTimeRange } from '@/utils/logUtils'
+import { getLogTime, getLogTimeRange, filterToTimeRange } from '@/utils/logUtils'
 
 import log_graphs from '@/logVisualize'
 
 var fileListHvd = []
 var fileListTc = []
 
+var logHvd = {
+  main: [],
+  vc: [],
+}
+
+var logTc = {
+  main: [],
+  vc: [],
+}
+
 function updateFileList(fileList, type) {
   console.log(`update ${type} FileList:`, fileList.length)
   if (type === 'hvd') {
     fileListHvd = fileList
+    logHvd.main = fileList.filter((file) => file.name.includes('current'))
+    logHvd.vc = fileList.filter((file) => file.name.includes('VirtualChannel'))
   } else if (type === 'tc') {
     fileListTc = fileList
+    logTc.main = fileList.filter((file) => file.name.includes('current'))
+    logTc.vc = fileList.filter((file) => file.name.includes('VirtualChannel'))
   }
 }
 
@@ -89,24 +102,19 @@ function onFilterToTime() {
   }
 }
 
-function extractTimestamp(line) {
-  const match = line.match(constants.REGEX_TIMESTAMP)
-  return match ? match[1] : null
-}
-
-// merge log files,  order by timestamp
+// merge log files, order by timestamp
 function mergeLogFiles(files) {
   const logs = files.map((file) => file.split('\n'))
   logs.sort((a, b) => {
-    const timestampA = extractTimestamp(a[0])
-    const timestampB = extractTimestamp(b[0])
-    // show error if timestamp is not found
-    if (!timestampA || !timestampB) {
-      console.error('Timestamp not found in log file')
-      message.error('Timestamp not found in log file')
+    const timeA = getLogTime(a[0])
+    const timeB = getLogTime(b[0])
+    // show error if time is not found
+    if (!timeA || !timeB) {
+      console.error('Time not found in log file')
+      message.error('Time not found in log file')
       return []
     }
-    return timestampA.localeCompare(timestampB)
+    return timeA - timeB
   })
 
   return logs.flat()
@@ -122,7 +130,7 @@ function analyze() {
   logGraphDataList.value = []
   dateSliderValue.value = [0, 100]
 
-  readFilesAsync(fileListHvd)
+  readFilesAsync(logHvd.main)
     .then((hvdLogs) => {
       console.log('hvdLogs:', hvdLogs.length)
       mergedHvdLogs = mergeLogFiles(hvdLogs)

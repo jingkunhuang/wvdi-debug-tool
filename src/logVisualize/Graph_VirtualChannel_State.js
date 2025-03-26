@@ -7,9 +7,7 @@
 // 2024-11-11T14:02:18.430Z <Debug> [0x4b4c][]HvdStream.cpp:150 updateStreamStatus::stream name:Basic PreState:0
 // 2024-11-11T14:02:18.430Z <Debug> [0x4b4c][]HvdStream.cpp:183 updateStreamStatus::stream name:Basic AfterState:0
 
-
-  import constants from '@/utils/constants'
-  import { getLogTimeRange } from '@/utils/logUtils';
+  import { getLogTime, getLogTimeRange } from '@/utils/logUtils';
 
   // updateStreamStatus::stream name:Basic AfterState:0
   const Regex_updateStreamStatus = /stream name:(\w+) (Pre|After)State:(\d+)/;
@@ -37,6 +35,7 @@
 
   export default class Graph_VirtualChannel_State {
 
+    // eslint-disable-next-line no-unused-vars
     process(lines, globalOptions, globalSettings) {
 
       console.log('Graph_VirtualChannel_State process');
@@ -61,10 +60,9 @@
       lines.forEach((line) => {
         let match = line.match(Regex_updateStreamStatus);
         if (match) {
-          let time_match = line.match(constants.REGEX_TIMESTAMP);
-          if (time_match) {
-
-            let updateTime = new Date(time_match[0]);
+          let time = getLogTime(line);
+          if (time) {
+            let updateTime = time;
 
             let streamName = match[1];
             let stateType = match[2] + 'State';
@@ -109,9 +107,6 @@
       // session up/down
       let sessionData = []
 
-
-
-
       // channel up/down
 
       var num_rows = streamMap.size;
@@ -150,7 +145,6 @@
         },
       };
 
-
       // Set colors for each state
       const stateColors = {
         'Unavailable': '#FF0000', // Red
@@ -175,5 +169,4 @@
         settings: chartSettings,
       };
     }
-
   }

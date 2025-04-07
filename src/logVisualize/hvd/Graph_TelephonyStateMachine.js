@@ -37,6 +37,11 @@ export default class Graph_TelephonyStateMachine {
 
     let [time_begin, time_end] = getLogTimeRange(lines);
 
+    if (globalOptions.timeRange && globalOptions.timeRange.length == 2) {
+      time_begin = globalOptions.timeRange[0];
+      time_end = globalOptions.timeRange[1];
+    }
+
     const columns = [
       { type: "string", id: "StateType" },
       { type: "string", id: "StateName" },

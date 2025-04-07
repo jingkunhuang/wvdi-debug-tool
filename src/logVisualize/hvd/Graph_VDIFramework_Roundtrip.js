@@ -13,7 +13,12 @@ export default class Graph_VDIFramework_Roundtrip {
 
     console.log('Graph_VDIFramework_Roundtrip process');
 
-    const [time_begin, time_end] = getLogTimeRange(lines);
+    let [time_begin, time_end] = getLogTimeRange(lines);
+
+    if (globalOptions.timeRange && globalOptions.timeRange.length == 2) {
+      time_begin = globalOptions.timeRange[0];
+      time_end = globalOptions.timeRange[1];
+    }
 
     let data = [];
     data.push(['Time', 'Roundtrip', { role: 'style' }]);

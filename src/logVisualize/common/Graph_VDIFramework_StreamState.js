@@ -33,7 +33,7 @@
     }
   }
 
-  export default class Graph_VirtualChannel_State {
+  export default class Graph_VDIFramework_StreamState {
 
     // eslint-disable-next-line no-unused-vars
     process(lines, globalOptions, globalSettings) {
@@ -46,6 +46,11 @@
       let data = [];
 
       let [time_begin, time_end] = getLogTimeRange(lines);
+
+      if (globalOptions.timeRange && globalOptions.timeRange.length == 2) {
+        time_begin = globalOptions.timeRange[0];
+        time_end = globalOptions.timeRange[1];
+      }
 
       const columns = [
         { type: "string", id: "StreamName" },

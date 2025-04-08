@@ -18,7 +18,7 @@
   </a-button>
   <a-slider v-model:value="dateSliderValue" range @afterChange="onAfterDateSliderChange" />
   <a-space>
-      <a-range-picker v-model:value="datePickerValue" show-time />
+      <!-- <a-range-picker v-model:value="datePickerValue" show-time /> -->
       <a-button type="primary" @click="onFilterToTime">Filter to Time</a-button>
       <a-button type="primary" @click="dateSliderValue=[0, 100]">Reset</a-button>
   </a-space>
